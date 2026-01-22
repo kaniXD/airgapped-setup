@@ -15,10 +15,11 @@ sudo apt update && sudo apt install -y \
   pinentry-curses \
   yubikey-manager \
   pcscd \
-  scdaemon
+  scdaemon \
+  vim
 
 # ============================================================
-# Enable pcscd service
+# Enable service
 echo "[*] Enabling and starting pcscd service..."
 sudo systemctl enable --now pcscd
 
@@ -27,14 +28,13 @@ sudo systemctl enable --now pcscd
 echo "[*] Initializing GPG keyring..."
 gpg --list-keys > /dev/null
 
-echo "[*] Configuring gpg-agent to use pinentry-curses with no timeout..."
+echo "[*] Configuring gpg-agent..."
 cat <<'EOF' > ~/.gnupg/gpg-agent.conf
-# Disable pinentry timeout so passphrase prompt waits indefinitely
-pinentry-program /usr/bin/pinentry-curses --timeout 0
+# Set pinentry timeout to 86400 seconds (24 hours) to avoid timeout when entering passphrase.
+# Note: setting timeout to 0 sometimes does not work as expected.
+pinentry-timeout 86400
+pinentry-program /usr/bin/pinentry-curses
 EOF
-
-echo "[*] Setting pinentry-curses as the default pinentry program..."
-sudo update-alternatives --set pinentry /usr/bin/pinentry-curses
 
 echo "[*] Reloading gpg-agent..."
 gpgconf --kill gpg-agent
@@ -54,5 +54,14 @@ rfkill block all
 
 echo "[*] Disabling all networking via NetworkManager..."
 nmcli networking off
+
+echo "[*] Verifying network is down..."
+ping -q -c1 1.1.1.1 &>/dev/null
+if [ $? -ne 0 ]; then
+    echo "[*] Network is successfully disabled."
+else
+    echo "[!] Network is still reachable!"
+    exit 1
+fi
 
 echo "[*] Air-gapped environment setup complete."
