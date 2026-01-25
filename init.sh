@@ -13,8 +13,8 @@ sudo apt update && sudo apt install -y \
   gnupg \
   gnupg-agent \
   pinentry-curses \
-  yubikey-manager \
-  yubico-piv-tool \
+  yubikey-manager yubico-piv-tool \
+  libfido2-1 libfido2-dev libfido2-doc fido2-tools \
   pcscd \
   scdaemon \
   vim
