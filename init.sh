@@ -14,6 +14,7 @@ sudo apt update && sudo apt install -y \
   gnupg-agent \
   pinentry-curses \
   yubikey-manager \
+  yubico-piv-tool \
   pcscd \
   scdaemon \
   vim
