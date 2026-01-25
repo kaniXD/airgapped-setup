@@ -57,12 +57,11 @@ echo "[*] Disabling all networking via NetworkManager..."
 nmcli networking off
 
 echo "[*] Verifying network is down..."
-ping -q -c1 1.1.1.1 &>/dev/null
-if [ $? -ne 0 ]; then
-    echo "[*] Network is successfully disabled."
-else
+if ping -q -c1 1.1.1.1 &>/dev/null; then
     echo "[!] Network is still reachable!"
     exit 1
+else
+    echo "[*] Network is successfully disabled."
 fi
 
 echo "[*] Air-gapped environment setup complete."
