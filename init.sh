@@ -38,7 +38,7 @@ pinentry-program /usr/bin/pinentry-curses
 EOF
 
 echo "[*] Reloading gpg-agent..."
-gpgconf --kill gpg-agent
+gpgconf --kill gpg-agent scdaemon
 
 # ============================================================
 # Ensure air-gapped environment
