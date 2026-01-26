@@ -50,11 +50,25 @@ while true; do
     fi
 done
 
-echo "[*] Blocking all radios (WiFi, Bluetooth)..."
+echo "[*] Soft Blocking all radios (WiFi, Bluetooth)..."
 rfkill block all
 
-echo "[*] Disabling all networking via NetworkManager..."
+echo "[*] Hard blocking bluetooth..."
+sudo systemctl disable --now bluetooth
+sudo modprobe -r btusb btrtl bnep rfcomm bluetooth
+
+echo "[*] Hard blocking network..."
+sudo ufw --force reset
+sudo ufw default deny incoming
+sudo ufw default deny outgoing
+sudo ufw enable
+
 nmcli networking off
+sleep 1
+
+sudo systemctl disable --now NetworkManager
+sudo modprobe -r iwlwifi
+sleep 1
 
 echo "[*] Verifying network is down..."
 if ping -q -c1 1.1.1.1 &>/dev/null; then
