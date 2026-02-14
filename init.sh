@@ -50,6 +50,8 @@ while true; do
     fi
 done
 
+sudo systemctl stop bluetooth exim4 cups avahi avahi-daemon sshd
+
 echo "[*] Soft Blocking all radios (WiFi, Bluetooth)..."
 rfkill block all
 
